@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class=post>
+		<div class=info>
+			<h2>
+				<a href="/view/{{post.id}}">{{post.title}}</a>
+				{% if is_owning(current_user, post) %}
+					<a href="/manage/{{post.id}}"><button class="fa fa-pencil" ></button></a>
+					<a href="/delete/{{post.id}}"><button class="fa fa-close" ></button></a>
+				{% endif %}
+			</h2>
+		</div>
+		<div class=cut>{{post.cut}}</div>
+		<div class=info><div style="width: 100%" class=meta><hr/>{{post.time}} by {{post.user.mail}}<hr/></div></div>
+	</div>
+{% endblock %}

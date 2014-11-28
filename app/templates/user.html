@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="user">
+		<div>{{user.mail}} (from {{user.regd}}) @{{user.grup}}</div>
+		<div>Birhsday: {{user.brth}}</div>
+		<div>
+			About:<br/>
+			{{user.about}}
+		</div>
+	</div>
+{% endblock %}

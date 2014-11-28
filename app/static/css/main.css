@@ -1,0 +1,87 @@
+a { text-decoration: none; }
+a:hover { text-decoration: underline; }
+body { margin: 0px; padding: 0px; font-size: 14pt; }
+
+
+/* blog related styles */
+.blog {
+	padding: 46pt 50pt 32pt 56pt;
+}
+
+.post, .user {
+	font-size: 14pt;
+	font-family: 'Exo 2';
+	font-weight: 300;
+}
+
+.post > .info, .user > .info {
+	width: 100%;
+	height: 40pt;
+	color: gray;
+}
+
+.post h2, .user h2 {
+	float: left;
+	font-size: 18pt;
+	margin: 6pt;
+	padding: 0pt;
+	font-weight: 700;
+}
+
+.post .meta, .user .meta {
+	padding-top: 11pt;
+	float: left;
+	font-size: 11pt;
+	font-variant: small-caps;
+}
+
+/* navigation bar */
+nav {
+	font-family: 'Dosis';
+	font-weight: 700;
+	vertical-align: sub;
+	font-size: 24pt;
+	position: fixed;
+	background-color: black;
+	width: 100%;
+}
+
+nav > a {
+	color: white;
+	padding: 4pt 12pt 4pt 12pt;
+	float: left;
+}
+
+nav > .right {
+	float: right;
+}
+
+.login-form {
+	float: right;
+	font-size: 6pt;
+}
+
+.login-form legend {
+	font-size: 9pt;
+}
+
+.login-form a {
+	color: gray;
+	text-decoration: underline;
+}
+
+.login-form a:hover {
+	text-decoration: none;
+}
+
+.blog a {
+	color: DimGray;
+}
+
+.blog a:visited {
+	color: DarkGray;
+}
+
+.post button {
+	font-size: 9pt;
+}

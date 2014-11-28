@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+	{% for user in users %}
+		<div class=user>
+			<div class=info>
+				<h2>
+					<a href="/users/{{user.mail}}">{{user.mail}}</a>
+					<a data-method="DELETE" class="rest" href="/users/{{user.mail}}"><button class="fa fa-close" ></button></a>
+				</h2>
+				<div class=meta>{{user.regd}}</div>
+			</div>
+			<hr/>
+		</div>
+	{% endfor %}
+{% endblock %}

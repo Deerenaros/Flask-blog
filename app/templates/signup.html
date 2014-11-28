@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<form style="font-size:12pt" class="pure-form pure-form-stacked" action="" method="post" name="login">
+		<fieldset>
+			{{form.hidden_tag()}}
+			{{form.mail(size=80, type="email", placeholder="Email")}}
+			{{form.pswd(size=80, type="password", placeholder="Password")}}
+			{{form.brth(class="auto-kal", placeholder="Birthsday")}}
+			{{form.about(cols=83, rows=10, placeholder="Write a little about yourself...")}}
+			<button type="submit" class="pure-button pure-button-primary">Sign up</button>
+		</fieldset>
+	</form>
+{% endblock %}

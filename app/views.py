@@ -1,0 +1,193 @@
+from flask import redirect, abort
+from flask.ext.login import current_user, login_required, login_user, logout_user
+from datetime import datetime
+
+from app import *
+from models import *
+from forms import *
+from usefull import *
+
+from sqlalchemy.exc import IntegrityError
+
+@app.route("/", methods=["GET", "POST"])
+@app.route("/index", methods=["GET", "POST"])
+@app.route("/posts", methods=["GET", "POST"])
+@templated("index.html")
+def index():
+	"""
+	This function had been connected with flask's router by decorating itself with 'app.route'. While decorated
+	flask tranlsates all parameters from url (with syntax: '/some/url/<parameter>') into function
+	arguments (right here function does not have any paramaters) while calling.
+	Also it decorated with templating decorator, which do dirty work (call render_template with putting into
+	arguments from dictionary if nessesary and other).
+
+	index() just render main page with posts on them and login form, and, if it's POST request right now, validating
+	form and checking user's password.
+	@rtype: dict
+	@return: return a python's dictionary (map structure) with parameters in dict items, which would be translated
+	into jinja templater.
+	"""
+	log_form, title = LoginForm(), "Home"
+	if log_form.validate_on_submit():
+		user = User.query.get(log_form.mail.data)
+		if user and user.pswd == log_form.pswd.data:
+			user.auth = True
+			db.session.commit()
+			login_user(user)
+	return dict(title="Home", log_form=log_form, posts=reversed(Post.query.all()), is_owning=is_owning)
+
+
+@app.route("/users")
+@templated("users.html")
+@admin_required
+def list_users():
+	"""
+	Just listing users
+	@return: dictionary with key 'users' pointing on iterable object through all users.
+	"""
+	return dict(users=User.query.all())
+
+
+@app.route("/users/<mail>")
+@templated("user.html")
+@admin_required
+def view_user(mail):
+	"""
+	Just more info about user
+	@type mail: basestring
+	@param mail: Here is a example, how url parametring works.
+	@return: dict with 'user' key pointing to requests user or aborting with default 404 error page returning.
+	"""
+	u = User.query.get(mail)
+	if u is None:
+		abort(404)
+	return dict(user=u)
+
+
+@app.route("/signup", methods=["GET", "POST"])
+@templated("signup.html")
+def signup_user():
+	"""
+	Signup-page with validating on POST request and commiting new user if all data is valid.
+	@return: If validated and signed up - redirecting to index-page, if trying to add existing user,
+	refresh page with message, otherwise - rendiring page with form (like simply GET request).
+	"""
+	form = RegForm()
+	try:
+		if form.validate_on_submit():
+			user = User(grup="user", regd=datetime.now())
+			form.populate_obj(user)
+			db.session.add(user)
+			db.session.commit()
+			return redirect("/index")
+		return dict(title="Tell us about you...", form=form)
+	except IntegrityError:
+		return dict(title="Tell us about you...", form=form, message="User with such email already exists")
+
+
+@app.route("/users/<mail>", methods=["DELETE"])
+@templated("user.html")
+@admin_required
+def del_user(mail):
+	"""
+	Try delete a user
+	@param mail: with this mail.
+	@return: "OK"
+	"""
+	try:
+		u = User.query.get(mail)
+		if u is not None:
+			db.session.delete(u)
+			db.session.commit()
+		else:
+			return "NOT EXISTS"
+		return "OK"
+	except:
+		return "FAIL"
+
+
+@app.route("/posts/<id>")
+@templated("view.html")
+def view_post(id):
+	"""
+	View full post
+	@param id: with this id.
+	@return: if post does not exists - abort to 404 page, otherwise - rendiring view.html template.
+	"""
+	viewing = Post.query.get(id)
+	if viewing is None:
+		abort(404)
+	return dict(post=viewing, is_owning=is_owning)
+
+
+@app.route("/manage/<id>", methods=["DELETE"])
+@owning_required
+def del_post(id):
+	"""
+	Try delete a post
+	@param id: with this id.
+	@return: redirect to /index page.
+	"""
+	try:
+		deleting = Post.query.get(id)
+		if deleting is not None:
+			db.session.delete(deleting)
+			db.session.commit()
+		else:
+			return "NOT EXISTS"
+		return "OK"
+	except:
+		return "FAIL"
+
+
+@app.route("/manage/<id>", methods=["GET", "POST"])
+@templated("manage.html")
+@owning_required
+def edit_post(id):
+	"""
+	On GET view entry filled up to form, on POST - refreshing exists object (if post do not exists must
+	fail on owning check).
+	@return: redirect to /index while edited or rendiring manage.html with filled up entry to a form.
+	"""
+	editing = Post.query.get(id)
+	if editing is None:
+		abort(404)
+	form = PostForm(obj=editing)
+	if form.validate_on_submit():
+		form.populate_obj(editing)
+		db.session.commit()
+		return redirect("/index")
+	return dict(title="Edit exists post", btn="Change", form=form)
+
+
+@app.route("/manage", methods=["GET", "POST"])
+@templated("manage.html")
+@login_required
+def create_post():
+	"""
+	Just like edit_post but with empty post and creating new on POST (if form validated).
+	@return: redirect to index on POST if success, otherwise - rendiring manage.html with clear form.
+	"""
+	form = PostForm()
+	if form.validate_on_submit():
+		creating = Post(time=datetime.now())
+		creating.user_mail = current_user.mail
+		form.populate_obj(creating)
+		db.session.add(creating)
+		db.session.commit()
+		return redirect("/index")
+	return dict(title="Create new post", btn="Post", form=form)
+
+
+@app.route("/logout")
+@login_required
+def logout():
+	"""
+	...hm, obviously - logout current user
+	@return: redirect to /index page.
+	"""
+	if current_user is not None:
+		current_user.auth = False
+		db.session.commit()
+		logout_user()
+	return redirect("/index")

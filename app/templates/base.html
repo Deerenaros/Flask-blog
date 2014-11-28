@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link href="http://fonts.googleapis.com/css?family=Dosis:700|Exo+2:700italic,300,700,300italic&subset=cyrillic,latin,latin-ext" rel="stylesheet" type="text/css">
+
+	{% assets "css" %}
+		<link href="{{ ASSET_URL }}" rel="stylesheet">
+	{% endassets %}
+
+	<title>{{title}}</title>
+</head>
+
+<body onload="main()">
+	<nav>
+		<a href="/index">Index</a>
+		{% if not current_user or not current_user.auth %}
+			<a href="/signup">Sign↑</a>
+			{% if log_form %}
+				<form class="pure-form login-form" action="" method="post" name="login">
+					<fieldset>
+						<legend style="color: gray">sign in here, or <a href="/signup">sign up</a></legend>
+						{{log_form.hidden_tag()}}
+						{{log_form.mail(size=20, type="email", placeholder="Email")}}
+						{{log_form.pswd(size=20, type="password", placeholder="Password")}}>
+						<button type="submit" class="pure-button pure-button-primary">Sign in</button>
+					</fieldset>
+				</form>
+			{% endif %}
+		{% else %}
+			<a href="/manage">Post</a>
+			{% if current_user.grup == "admin" %}
+				<a href="/users">Users</a>
+			{% endif %}
+			<a href="/logout">Logout</a>
+		{% endif %}
+		<a class="right" href="/about">About</a>
+	</nav>
+
+	<div class="blog">
+		{% block content %}{% endblock %}
+	</div>
+
+	{% assets "js" %}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{% endassets %}
+
+	<script>
+		function main() {
+			{% if message %}alert("{{message}}");{% endif %}
+			$(".rest").restfulizer();
+		}
+	</script>
+</body>
+</html>
