@@ -6,6 +6,14 @@ from app import *
 from models import *
 
 
+def user(__set=""):
+	if __set != "":
+		session["user"] = __set
+		return None
+	if user in session:
+		return load_user(session["user"])
+	return None
+
 def load_user(userid):
 	"""
 	This function requered by flask user manager extension, which help on managing user (cookies, ip, authintication,
@@ -59,7 +67,7 @@ def owning_required(f):
 	@wraps(f)
 	def decorated_function(*args, **kwargs):
 		post = Post.query.get(kwargs["id"])
-		if is_owning(current_user, post):
+		if is_owning(user(), post):
 			return f(*args, **kwargs)
 		return "Access denied!"
 	return decorated_function
@@ -71,7 +79,7 @@ def admin_required(f):
 	"""
 	@wraps(f)
 	def decorated_function(*args, **kwargs):
-		if current_user.group == "admin":
+		if user().grup == "admin":
 			return f(*args, **kwargs)
 		return "Access denied!"
 	return decorated_function

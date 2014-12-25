@@ -17,14 +17,15 @@ PERMS = "email,nohttps"
 REDIRECT = "http://vesn.info/vk_auth"
 RESP = "code"
 VER = "5.27"
-
 log_url = "%s/authorize?client_id=%s&scope=%s&redirect_uri=%s&response_type=%s&v=%s"
 auth_url = "%s/access_token?client_id=%s&client_secret=%s&code=%s&redirect_uri=%s"
 
 
+
 def dd(**kwargs):
-	kwargs.update(user=lambda: load_user(session["user"]), is_owning=is_owning)
+	kwargs.update(user=user, is_owning=is_owning)
 	return kwargs
+
 
 @app.route("/login")
 def login():
@@ -42,7 +43,7 @@ def auth():
 	u = User(token=resp["access_token"], mail=resp["email"], id=resp["user_id"], group="user")
 	db.session.add(u)
 	db.session.commit()
-	session["user"] = u.id
+	user(u)
 	return redirect("/")
 
 
@@ -217,5 +218,5 @@ def logout():
 	...hm, obviously - logout current user
 	@return: redirect to /index page.
 	"""
-	session["user"] = None
+	user(None)
 	return redirect("/index")
