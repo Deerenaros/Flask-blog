@@ -35,7 +35,7 @@ def auth():
 	print resp
 	if "error_description" in resp:
 		return "Authorize failed"
-	u = User(token=resp["access_token"], email=["email"], id=resp["user_id"], group="user")
+	u = User(token=resp["access_token"], email=resp["email"], id=resp["user_id"], group="user")
 	db.session.add(u)
 	db.session.commit()
 	login_user(u)
@@ -189,7 +189,7 @@ def edit_post(id):
 
 @app.route("/manage", methods=["GET", "POST"])
 @templated("manage.html")
-@login_required
+#@login_required
 def create_post():
 	"""
 	Just like edit_post but with empty post and creating new on POST (if form validated).
@@ -207,12 +207,13 @@ def create_post():
 
 
 @app.route("/logout")
-@login_required
+#@login_required
 def logout():
 	"""
 	...hm, obviously - logout current user
 	@return: redirect to /index page.
 	"""
+	print current_user
 	if current_user is not None:
 		current_user.auth = False
 		db.session.commit()
