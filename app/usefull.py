@@ -45,7 +45,7 @@ def is_owning(user, post):
 	@return: just boolean
 	"""
 	try:
-		if user.grup == "admin" or (user.mail == post.user_mail):
+		if user.group == "admin" or (user.mail == post.user_mail):
 			return True
 	except Exception:
 		pass
@@ -72,7 +72,7 @@ def admin_required(f):
 	"""
 	@wraps(f)
 	def decorated_function(*args, **kwargs):
-		if current_user.grup == "admin":
+		if current_user.group == "admin":
 			return f(*args, **kwargs)
 		return "Access denied!"
 	return decorated_function

@@ -85,3 +85,7 @@ nav > .right {
 .post button {
 	font-size: 9pt;
 }
+
+.vk_api_transport {
+	display: none;
+}

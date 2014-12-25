@@ -1,6 +1,7 @@
-from flask import redirect, abort
+from flask import redirect, abort, request
 from flask.ext.login import current_user, login_required, login_user, logout_user
 from datetime import datetime
+import json
 
 from app import *
 from models import *
@@ -8,6 +9,36 @@ from forms import *
 from usefull import *
 
 from sqlalchemy.exc import IntegrityError
+
+APP_ID = "4686567"
+SECRET = "f9CWp3eRmepC3gjzxKx1"
+VK = "https://oauth.vk.com"
+PERMS = "email,nohttps"
+REDIRECT = "http://vesn.info/vk_auth"
+RESP = "code"
+VER = "5.27"
+
+log_url = "%s/authorize?client_id=%s&scope=%s&redirect_uri=%s&response_type=%s&v=%s"
+auth_url = "%s/access_token?client_id=%s&client_secret=%s&code=%s&redirect_uri=%s"
+
+
+@app.route("/login")
+def login():
+	return redirect(log_url % (VK, APP_ID, PERMS, REDIRECT, RESP, VER))
+
+
+@app.route("/vk_auth", methods=["GET", "POST"])
+def auth():
+	code = request.args.get("code")
+	print code
+	resp = urllib.urlopen(auth_url % (VK, APP_ID, SECRET, code, REDIRECT)).read()
+	resp = json.loads(resp)
+	print resp
+	u = User(token=resp["access_token"], id=resp["user_id"], group="user")
+	db.session.commit(u)
+	login_user(u)
+	return redirect("/")
+
 
 @app.route("/", methods=["GET", "POST"])
 @app.route("/index", methods=["GET", "POST"])
@@ -28,12 +59,6 @@ def index():
 	into jinja templater.
 	"""
 	log_form, title = LoginForm(), "Home"
-	if log_form.validate_on_submit():
-		user = User.query.get(log_form.mail.data)
-		if user and user.pswd == log_form.pswd.data:
-			user.auth = True
-			db.session.commit()
-			login_user(user)
 	return dict(title="Home", log_form=log_form, posts=reversed(Post.query.all()), is_owning=is_owning)
 
 

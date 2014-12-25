@@ -4,9 +4,9 @@ from flask.ext.assets import Environment, Bundle
 from flask.ext.login import LoginManager
 
 """
-вторая лабораторная:
-права доступа с ролями
-улучшенная авторизация (https + сертификаты)
+second lab:
+rights with access roles
+better authorization (https + serts) or VK.auth
 """
 
 app = Flask(__name__)

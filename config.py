@@ -7,3 +7,4 @@ SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, "db_repository")
 
 CSRF_ENABLED = True
 SECRET_KEY = "13b0f162ecdd77aa"
+SECURITY_POST_LOGIN = "/profile"

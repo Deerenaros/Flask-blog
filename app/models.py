@@ -1,6 +1,7 @@
-from app import db
+from app import app, db
 from datetime import datetime
-
+from flask.ext.social import Social
+from flask.ext.social.datastore import SQLAlchemyConnectionDatastore
 
 class Post(db.Model):
 	"""
@@ -30,34 +31,12 @@ class Post(db.Model):
 
 # take a quest about sqlite politics (restrict, cascade)
 class User(db.Model):
-	"""
-	This is a class represents a model-object for user entity.
-	@type mail: string
-	@param mail: This is a primary key, that mean registred user's e-mail.
-	@type abut: string
-	@param abut: Something about user, that he had wrote at registration.
-	@type regd: datetime
-	@param regd: Date & time of registration.
-	@type brth: datetime
-	@param brth: Birthsday.
-	@type auth: bool
-	@param auth: Is user authenticated.
-	@type grup: string
-	@param grup: Just a string for group classification. Simply. Hard. Works.
-	@type posts: relationship
-	@param posts: backref for connecting users with posts.
-	"""
-
-	admin = None
-
-	mail = db.Column(db.String(36), primary_key=True)
-	abut = db.Column(db.String(10**6))
-	regd = db.Column(db.DateTime, default=datetime.now)
-	brth = db.Column(db.DateTime)
-	pswd = db.Column(db.String(36))
-	auth = db.Column(db.Boolean)
-	grup = db.Column(db.String(16))
+	id = db.Column(db.String(36), primary_key=True)
+	token = db.Column(db.String(36))
+	mail = db.Column(db.String(36))
+	group = db.Column(db.String(16))
 	posts = db.relationship("Post", backref="user", lazy="dynamic")
+
 
 	def get_id(self):
 		return unicode(self.mail)
@@ -73,9 +52,10 @@ class User(db.Model):
 
 
 def prepare_models():
-	"""
+	pass
+"""	""
 	Simply function what had to call at running in order to create admin. If one do no exists.
-	"""
+	""
 	User.admin = filter(lambda u: u.grup == "admin", User.query.all())
 
 	if len(User.admin) == 0:
@@ -85,3 +65,4 @@ def prepare_models():
 		db.session.commit()
 	else:
 		User.admin = admin[0]
+"""

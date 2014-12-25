@@ -17,20 +17,28 @@
 </head>
 
 <body onload="main()">
+	<div id="vk_api_transport"></div>
+	<script type="text/javascript">
+		window.vkAsyncInit = function() {
+			VK.init({
+				apiId: app_id_here
+			});
+		};
+
+		setTimeout(function() {
+			var el = document.createElement("script");
+			el.type = "text/javascript";
+			el.src = "//vk.com/js/api/openapi.js";
+			el.async = true;
+			document.getElementById("vk_api_transport").appendChild(el);
+		}, 0);
+	</script>
 	<nav>
 		<a href="/index">Index</a>
 		{% if not current_user or not current_user.auth %}
 			<a href="/signup">Sign↑</a>
 			{% if log_form %}
-				<form class="pure-form login-form" action="" method="post" name="login">
-					<fieldset>
-						<legend style="color: gray">sign in here, or <a href="/signup">sign up</a></legend>
-						{{log_form.hidden_tag()}}
-						{{log_form.mail(size=20, type="email", placeholder="Email")}}
-						{{log_form.pswd(size=20, type="password", placeholder="Password")}}>
-						<button type="submit" class="pure-button pure-button-primary">Sign in</button>
-					</fieldset>
-				</form>
+				<a href="/login">Login with VK</a>
 			{% endif %}
 		{% else %}
 			<a href="/manage">Post</a>
