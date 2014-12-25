@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import request, render_template, redirect, abort
+from flask import request, render_template, redirect, abort, session
 from flask.ext.login import current_user
 
 from app import *

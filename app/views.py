@@ -1,7 +1,9 @@
 from flask import redirect, abort, request, session
 from flask.ext.login import current_user, login_required, login_user, logout_user
 from datetime import datetime
-import json, requests
+import json
+import requests
+import sqlalchemy
 
 from app import *
 from models import *
@@ -34,15 +36,13 @@ def login():
 @app.route("/vk_auth", methods=["GET", "POST"])
 def auth():
 	code = request.args.get("code")
-	print code
 	resp = requests.get(auth_url % (VK, APP_ID, SECRET, code, REDIRECT)).json()
-	print resp
 	if "error_description" in resp:
 		return "Authorize failed"
 	u = User(token=resp["access_token"], mail=resp["email"], id=resp["user_id"], group="user")
 	try:
 		db.session.add(u)
-	except IntegrityError:
+	except sqlalchemy.exc.IntegrityError:
 		db.session.rollback()
 		db.session.update(u)
 	db.session.commit()
