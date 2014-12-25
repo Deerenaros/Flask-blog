@@ -19,7 +19,6 @@ class Post(db.Model):
 	html = db.Column(db.String(10**6))
 	time = db.Column(db.DateTime, default=datetime.now)
 	user_mail = db.Column(db.String(36), db.ForeignKey("user.mail", ondelete="RESTRICT"))
-	is_authenticated = True
 
 	@property
 	def cut(self):
@@ -37,6 +36,7 @@ class User(db.Model):
 	mail = db.Column(db.String(36))
 	group = db.Column(db.String(16))
 	posts = db.relationship("Post", backref="user", lazy="dynamic")
+	is_authenticated = True
 
 
 	def get_id(self):
