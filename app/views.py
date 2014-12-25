@@ -1,4 +1,4 @@
-from flask import redirect, abort, request
+from flask import redirect, abort, request, session
 from flask.ext.login import current_user, login_required, login_user, logout_user
 from datetime import datetime
 import json, requests
@@ -38,7 +38,7 @@ def auth():
 	u = User(token=resp["access_token"], mail=resp["email"], id=resp["user_id"], group="user")
 	db.session.add(u)
 	db.session.commit()
-	login_user(u)
+	session["user"] = u
 	return redirect("/")
 
 
@@ -99,6 +99,7 @@ def signup_user():
 	@return: If validated and signed up - redirecting to index-page, if trying to add existing user,
 	refresh page with message, otherwise - rendiring page with form (like simply GET request).
 	"""
+	return "Do not work"
 	form = RegForm()
 	try:
 		if form.validate_on_submit():
@@ -215,7 +216,5 @@ def logout():
 	"""
 	print current_user
 	if current_user is not None:
-		current_user.auth = False
-		db.session.commit()
-		logout_user()
+		session["user"] = None
 	return redirect("/index")
