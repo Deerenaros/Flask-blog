@@ -19,6 +19,7 @@ class Post(db.Model):
 	html = db.Column(db.String(10**6))
 	time = db.Column(db.DateTime, default=datetime.now)
 	user_mail = db.Column(db.String(36), db.ForeignKey("user.mail", ondelete="RESTRICT"))
+	is_authenticated = True
 
 	@property
 	def cut(self):

@@ -207,7 +207,7 @@ def create_post():
 
 
 @app.route("/logout")
-#@login_required
+@login_required
 def logout():
 	"""
 	...hm, obviously - logout current user
