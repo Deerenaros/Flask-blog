@@ -5,7 +5,6 @@ from flask.ext.login import current_user
 from app import *
 from models import *
 
-
 def user(__set=""):
 	if __set != "":
 		session["user"] = __set

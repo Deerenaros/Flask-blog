@@ -8,7 +8,7 @@
 					<a href="/posts/{{post.id}}">{{post.title}}</a>
 				</h2>
 				<div class=meta>
-					{% if is_owning(current_user, post) %}
+					{% if is_owning(user(), post) %}
 						<a href="/manage/{{post.id}}">
 							<button class="fa fa-pencil" ></button>
 						</a>
