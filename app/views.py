@@ -1,7 +1,7 @@
 from flask import redirect, abort, request
 from flask.ext.login import current_user, login_required, login_user, logout_user
 from datetime import datetime
-import json
+import json, requests
 
 from app import *
 from models import *
@@ -31,11 +31,13 @@ def login():
 def auth():
 	code = request.args.get("code")
 	print code
-	resp = urllib.urlopen(auth_url % (VK, APP_ID, SECRET, code, REDIRECT)).read()
-	resp = json.loads(resp)
+	resp = requests.get(auth_url % (VK, APP_ID, SECRET, code, REDIRECT)).json()
 	print resp
-	u = User(token=resp["access_token"], id=resp["user_id"], group="user")
-	db.session.commit(u)
+	if "error_description" in resp:
+		return "Authorize failed"
+	u = User(token=resp["access_token"], email=["email"], id=resp["user_id"], group="user")
+	db.session.add(u)
+	db.session.commit()
 	login_user(u)
 	return redirect("/")
 
@@ -59,7 +61,7 @@ def index():
 	into jinja templater.
 	"""
 	log_form, title = LoginForm(), "Home"
-	return dict(title="Home", log_form=log_form, posts=reversed(Post.query.all()), is_owning=is_owning)
+	return dict(title="Home", posts=reversed(Post.query.all()), is_owning=is_owning)
 
 
 @app.route("/users")

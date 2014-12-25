@@ -18,7 +18,7 @@
 
 <body onload="main()">
 	<div id="vk_api_transport"></div>
-	<script type="text/javascript">
+	<!--script type="text/javascript">
 		window.vkAsyncInit = function() {
 			VK.init({
 				apiId: app_id_here
@@ -32,10 +32,10 @@
 			el.async = true;
 			document.getElementById("vk_api_transport").appendChild(el);
 		}, 0);
-	</script>
+	</script-->
 	<nav>
 		<a href="/index">Index</a>
-		{% if not current_user or not current_user.auth %}
+		{% if not current_user %}
 			<a href="/signup">Sign↑</a>
 			{% if log_form %}
 				<a href="/login">Login with VK</a>
