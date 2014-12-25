@@ -35,7 +35,7 @@
 	</script-->
 	<nav>
 		<a href="/index">Index</a>
-		{% if not session["user"] %}
+		{% if not user %}
 			<a href="/login">Login with VK</a>
 		{% else %}
 			<a href="/manage">Post</a>

@@ -22,6 +22,10 @@ log_url = "%s/authorize?client_id=%s&scope=%s&redirect_uri=%s&response_type=%s&v
 auth_url = "%s/access_token?client_id=%s&client_secret=%s&code=%s&redirect_uri=%s"
 
 
+def dd(**kwargs):
+	kwargs.update(user=lambda: load_user(session["user"]), is_owning=is_owning)
+	return kwargs
+
 @app.route("/login")
 def login():
 	return redirect(log_url % (VK, APP_ID, PERMS, REDIRECT, RESP, VER))
@@ -38,7 +42,7 @@ def auth():
 	u = User(token=resp["access_token"], mail=resp["email"], id=resp["user_id"], group="user")
 	db.session.add(u)
 	db.session.commit()
-	session["user"] = u
+	session["user"] = u.id
 	return redirect("/")
 
 
@@ -52,16 +56,15 @@ def index():
 	flask tranlsates all parameters from url (with syntax: '/some/url/<parameter>') into function
 	arguments (right here function does not have any paramaters) while calling.
 	Also it decorated with templating decorator, which do dirty work (call render_template with putting into
-	arguments from dictionary if nessesary and other).
+	arguments from ddionary if nessesary and other).
 
 	index() just render main page with posts on them and login form, and, if it's POST request right now, validating
 	form and checking user's password.
-	@rtype: dict
-	@return: return a python's dictionary (map structure) with parameters in dict items, which would be translated
+	@rtype: dd
+	@return: return a python's ddionary (map structure) with parameters in dd items, which would be translated
 	into jinja templater.
 	"""
-	log_form, title = LoginForm(), "Home"
-	return dict(title="Home", posts=reversed(Post.query.all()), is_owning=is_owning)
+	return dd(title="Home", posts=reversed(Post.query.all()))
 
 
 @app.route("/users")
@@ -70,9 +73,9 @@ def index():
 def list_users():
 	"""
 	Just listing users
-	@return: dictionary with key 'users' pointing on iterable object through all users.
+	@return: ddionary with key 'users' pointing on iterable object through all users.
 	"""
-	return dict(users=User.query.all())
+	return dd(title="Userlist", users=User.query.all())
 
 
 @app.route("/users/<mail>")
@@ -83,12 +86,12 @@ def view_user(mail):
 	Just more info about user
 	@type mail: basestring
 	@param mail: Here is a example, how url parametring works.
-	@return: dict with 'user' key pointing to requests user or aborting with default 404 error page returning.
+	@return: dd with 'user' key pointing to requests user or aborting with default 404 error page returning.
 	"""
 	u = User.query.get(mail)
 	if u is None:
 		abort(404)
-	return dict(user=u)
+	return dd(user=u)
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -108,9 +111,9 @@ def signup_user():
 			db.session.add(user)
 			db.session.commit()
 			return redirect("/index")
-		return dict(title="Tell us about you...", form=form)
+		return dd(title="Tell us about you...", form=form)
 	except IntegrityError:
-		return dict(title="Tell us about you...", form=form, message="User with such email already exists")
+		return dd(title="Tell us about you...", form=form, message="User with such email already exists")
 
 
 @app.route("/users/<mail>", methods=["DELETE"])
@@ -145,7 +148,7 @@ def view_post(id):
 	viewing = Post.query.get(id)
 	if viewing is None:
 		abort(404)
-	return dict(post=viewing, is_owning=is_owning)
+	return dd(post=viewing)
 
 
 @app.route("/manage/<id>", methods=["DELETE"])
@@ -185,7 +188,7 @@ def edit_post(id):
 		form.populate_obj(editing)
 		db.session.commit()
 		return redirect("/index")
-	return dict(title="Edit exists post", btn="Change", form=form)
+	return dd(title="Edit exists post", btn="Change", form=form)
 
 
 @app.route("/manage", methods=["GET", "POST"])
@@ -204,7 +207,7 @@ def create_post():
 		db.session.add(creating)
 		db.session.commit()
 		return redirect("/index")
-	return dict(title="Create new post", btn="Post", form=form)
+	return dd(title="Create new post", btn="Post", form=form)
 
 
 @app.route("/logout")
@@ -214,7 +217,5 @@ def logout():
 	...hm, obviously - logout current user
 	@return: redirect to /index page.
 	"""
-	print current_user
-	if current_user is not None:
-		session["user"] = None
+	session["user"] = None
 	return redirect("/index")

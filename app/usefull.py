@@ -6,7 +6,6 @@ from app import *
 from models import *
 
 
-@login_manager.user_loader
 def load_user(userid):
 	"""
 	This function requered by flask user manager extension, which help on managing user (cookies, ip, authintication,
