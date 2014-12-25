@@ -21,7 +21,6 @@ log_url = "%s/authorize?client_id=%s&scope=%s&redirect_uri=%s&response_type=%s&v
 auth_url = "%s/access_token?client_id=%s&client_secret=%s&code=%s&redirect_uri=%s"
 
 
-
 def dd(**kwargs):
 	kwargs.update(user=user, is_owning=is_owning)
 	return kwargs
@@ -41,7 +40,11 @@ def auth():
 	if "error_description" in resp:
 		return "Authorize failed"
 	u = User(token=resp["access_token"], mail=resp["email"], id=resp["user_id"], group="user")
-	db.session.add(u)
+	try:
+		db.session.add(u)
+	except IntegrityError:
+		db.session.rollback()
+		db.session.update(u)
 	db.session.commit()
 	user(u)
 	return redirect("/")
