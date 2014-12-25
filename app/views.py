@@ -35,7 +35,7 @@ def auth():
 	print resp
 	if "error_description" in resp:
 		return "Authorize failed"
-	u = User(token=resp["access_token"], email=resp["email"], id=resp["user_id"], group="user")
+	u = User(token=resp["access_token"], mail=resp["email"], id=resp["user_id"], group="user")
 	db.session.add(u)
 	db.session.commit()
 	login_user(u)
