@@ -48,9 +48,11 @@
         <a class="right" href="/about">About</a>
     </nav>-->
     <nav>
-        <a href="/index">Index</a>
-        <a href="/tag/News">News</a>
-        <a href="/tag/Presentation">Presentations</a>
+        <a href="/index">Всё</a>
+        <a href="/tag/News">Новости</a>
+        <a href="/tag/Presentation">Презентации</a>
+
+        <span style="float: right; font-variant: small-caps; font-size: small">СПб ГОУ СОШ №138, учительница начальных классов Веснина Светлана Валерьевна</span>
     </nav>
 
 	<div class="blog">
@@ -61,7 +63,7 @@
 
 	<script>
 		function main() {
-			{% if message %}alert("{{message}}");{% endif %}
+			{% if message %} alert("{{message}}"); {% endif %}
 			$(".rest").restfulizer();
 		}
 	</script>

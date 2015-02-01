@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from app import app, db
 from datetime import datetime
 from flask.ext.social import Social

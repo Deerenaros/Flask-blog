@@ -1,4 +1,6 @@
 #!/bin/python2
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 import imp
 from migrate.versioning import api

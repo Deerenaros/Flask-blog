@@ -1,4 +1,6 @@
 #!/bin/python2
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from migrate.versioning import api
 from config import *
 from app import db, models

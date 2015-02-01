@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from flask import redirect, abort, request, session
 from flask.ext.login import current_user, login_required, login_user, logout_user
 from datetime import datetime

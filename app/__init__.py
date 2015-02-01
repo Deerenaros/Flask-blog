@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.assets import Environment, Bundle
