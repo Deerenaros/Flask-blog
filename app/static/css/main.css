@@ -50,6 +50,7 @@ nav span {
     float: right;
     font-variant: small-caps;
     font-size: 14pt;
+    color: lightgray;
 }
 
 nav a {
