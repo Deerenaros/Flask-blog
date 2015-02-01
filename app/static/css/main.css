@@ -46,9 +46,15 @@ nav {
 	width: 100%;
 }
 
+nav > span {
+    float: right;
+    font-variant: small-caps;
+    font-size: 14pt;
+}
+
 nav > a {
 	color: white;
-	padding: 4pt 12pt 4pt 12pt;
+	padding: 2pt 12pt 2pt 12pt;
 	float: left;
 }
 
