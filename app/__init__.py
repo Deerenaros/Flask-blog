@@ -17,7 +17,7 @@ login_manager.init_app(app)
 db = SQLAlchemy(app)
 assets = Environment(app)
 
-js = Bundle('jquery.min.js', 'js/jquery.min.js', 'js/jquery.restfulizer.js', 'js/moment.min.js', 'kalendae.js',
+js = Bundle('js/jquery.min.js', 'js/jquery.min.js', 'js/jquery.restfulizer.js', 'js/moment.min.js', 'kalendae.js',
 			filters='jsmin', output='get/packed.js')
 css = Bundle('kalendae.css', 'css/faw.css', 'css/main.css', 'css/pure-min.css',
 			 filters='cssmin', output='get/packed.css')
