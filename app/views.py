@@ -25,6 +25,11 @@ def dd(**kwargs):
 def index():
     return dd(title="Home", posts=reversed(Post.query.all()))
 
+@app.route("/tag/<name>")
+@templated("index.html")
+def selected(select):
+    return dd(title=select, posts=reversed(filter(lambda p: p.tag == select, Post.query.all())))
+
 
 @app.route("/posts/<id>")
 @templated("view.html")
