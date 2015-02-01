@@ -14,8 +14,8 @@ from sqlalchemy.exc import IntegrityError
 
 
 def dd(**kwargs):
-	kwargs.update(user=user, is_owning=is_owning)
-	return kwargs
+    kwargs.update(user=user, is_owning=is_owning)
+    return kwargs
 
 
 @app.route("/")
@@ -23,41 +23,41 @@ def dd(**kwargs):
 @app.route("/posts")
 @templated("index.html")
 def index():
-	return dd(title="Home", posts=reversed(Post.query.all()))
+    return dd(title="Home", posts=reversed(Post.query.all()))
 
 
 @app.route("/posts/<id>")
 @templated("view.html")
 def view_post(id):
-	viewing = Post.query.get(id)
-	if viewing is None:
-		abort(404)
-	return dd(post=viewing)
+    viewing = Post.query.get(id)
+    if viewing is None:
+        abort(404)
+    return dd(post=viewing)
 
 
 @app.route("/manage/<id>", methods=["GET", "POST"])
 @templated("manage.html")
 @owning_required
 def edit_post(id):
-	editing = Post.query.get(id)
-	if editing is None:
-		abort(404)
-	form = PostForm(obj=editing)
-	if form.validate_on_submit():
-		form.populate_obj(editing)
-		db.session.commit()
-		return redirect("/index")
-	return dd(title="Edit exists post", btn="Change", form=form)
+    editing = Post.query.get(id)
+    if editing is None:
+        abort(404)
+    form = PostForm(obj=editing)
+    if form.validate_on_submit():
+        form.populate_obj(editing)
+        db.session.commit()
+        return redirect("/index")
+    return dd(title="Edit exists post", btn="Change", form=form)
 
 
 @app.route("/manage", methods=["GET", "POST"])
 @templated("manage.html")
 def create_post():
-	form = PostForm()
-	if form.validate_on_submit():
-		creating = Post(time=datetime.now())
-		form.populate_obj(creating)
-		db.session.add(creating)
-		db.session.commit()
-		return redirect("/index")
-	return dd(title="Create new post", btn="Post", form=form)
+    form = PostForm()
+    if form.validate_on_submit():
+        creating = Post(time=datetime.now())
+        form.populate_obj(creating)
+        db.session.add(creating)
+        db.session.commit()
+        return redirect("/index")
+    return dd(title="Create new post", btn="Post", form=form)
