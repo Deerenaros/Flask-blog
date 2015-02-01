@@ -8,19 +8,10 @@
 					<a href="/posts/{{post.id}}">{{post.title}}</a>
 				</h2>
 				<div class=meta>
-					{% if is_owning(user(), post) %}
-						<a href="/manage/{{post.id}}">
-							<button class="fa fa-pencil" ></button>
-						</a>
-						<a data-method="DELETE" class="rest" href="/manage/{{post.id}}">
-							<button class="fa fa-close" ></button>
-						</a>
-					{% endif %}
-					{{post.time}} by {{post.user.mail}}
+					{{post.time}}
 				</div>
 			</div>
-			<div class=cut>{{post.cut}}</div>
-			<hr/>
+			<div class=cut>{{post.cut|safe}}</div>
 		</div>
 	{% endfor %}
 {% endblock %}

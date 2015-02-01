@@ -18,7 +18,6 @@ class Post(db.Model):
 	title = db.Column(db.String(120))
 	html = db.Column(db.String(10**6))
 	time = db.Column(db.DateTime, default=datetime.now)
-	user_mail = db.Column(db.String(36), db.ForeignKey("user.mail", ondelete="RESTRICT"))
 
 	@property
 	def cut(self):
@@ -27,43 +26,3 @@ class Post(db.Model):
 	@staticmethod
 	def add(**kwargs):
 		db.session.add(Post(**kwargs))
-
-
-# take a quest about sqlite politics (restrict, cascade)
-class User(db.Model):
-	id = db.Column(db.String(36), primary_key=True)
-	token = db.Column(db.String(36))
-	mail = db.Column(db.String(36))
-	group = db.Column(db.String(16))
-	posts = db.relationship("Post", backref="user", lazy="dynamic")
-	is_authenticated = True
-
-
-	def get_id(self):
-		return unicode(self.mail)
-
-	def is_authenticated(self):
-		return bool(self.auth)
-
-	def is_anonymous(self):
-		return False
-
-	def is_active(self):
-		return True
-
-
-def prepare_models():
-	pass
-"""	""
-	Simply function what had to call at running in order to create admin. If one do no exists.
-	""
-	User.admin = filter(lambda u: u.grup == "admin", User.query.all())
-
-	if len(User.admin) == 0:
-		mail = raw_input("Type admin's e-mail: ")
-		pswd = raw_input("Type admin's password: ")
-		db.session.add(User(mail=mail, pswd=pswd, grup="admin"))
-		db.session.commit()
-	else:
-		User.admin = admin[0]
-"""

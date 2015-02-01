@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -32,21 +32,21 @@
 			el.async = true;
 			document.getElementById("vk_api_transport").appendChild(el);
 		}, 0);
-	</script-->
-	<nav>
-		<a href="/index">Index</a>
-		{% if not user %}
-			<a href="/login">Login with VK</a>
-		{% else %}
-			<a href="/manage">Post</a>
-			{% if current_user.grup == "admin" %}
-				<a href="/users">Users</a>
-			{% endif %}
-			<a href="/logout">Logout</a>
-			<a class="right">Loged in as {{current_user.mail}}</a>
-		{% endif %}
-		<a class="right" href="/about">About</a>
-	</nav>
+	</script
+    <nav>
+        <a href="/index">Index</a>
+        {% if not user %}
+        <a href="/login">Login with VK</a>
+        {% else %}
+        <a href="/manage">Post</a>
+        {% if current_user.grup == "admin" %}
+        <a href="/users">Users</a>
+        {% endif %}
+        <a href="/logout">Logout</a>
+        <a class="right">Loged in as {{current_user.mail}}</a>
+        {% endif %}
+        <a class="right" href="/about">About</a>
+    </nav>-->
 
 	<div class="blog">
 		{% block content %}{% endblock %}
